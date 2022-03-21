@@ -13,6 +13,9 @@ async function processFile(element) {
         await downloadFile(`${config.config().liferay.host}/${element.contentUrl}`,`${dir}/${element.title}`)
     }catch(exp)
     {
+        fs.unlink(`${dir}/${element.title}`, function (err) {
+            if (err) throw err;
+        });
         console.error(`Error while downloading file: ${element.title}`)
     }
     
