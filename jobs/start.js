@@ -1,4 +1,5 @@
 const webcontent = require('./webcontent');
+const documents = require('./documents');
 
 
 
@@ -6,6 +7,7 @@ const webcontent = require('./webcontent');
 function start()
 {
     webcontent.start();
+    documents.start();
 }
 
 module.exports = {

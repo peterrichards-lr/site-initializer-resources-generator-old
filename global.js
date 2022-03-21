@@ -5,6 +5,13 @@ global._config = {
         user: "root",
         password: "SQLAdmin",
         database: "newlr_insurance_74",
+       
+        
+    },
+    liferay:{
+        host:"http://localhost:8080",
+        user:"admin@lifeinsurances.com",
+        password:"L1feray$"
     },
     siteId:00
 };
