@@ -13,7 +13,7 @@ async function processFile(element) {
         await downloadFile(`${config.config().liferay.host}/${element.contentUrl}`,`${dir}/${element.title}`)
     }catch(exp)
     {
-
+        console.error(`Error while downloading file: ${element.title}`)
     }
     
 }
