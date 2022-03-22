@@ -28,6 +28,11 @@ async function checkFolder() {
 async function start() {
     var rows = await applications.getRootDocuments();
     await checkFolder();
+    if(rows == null || rows.items == null || rows.items.length <=0)
+    {
+      console.info(`No Documents and Media found!`);
+      return;
+    }
     for (let index = 0; index < rows.items.length; index++) {
         const element = rows.items[index];
         processFile(rows.items[index]);
