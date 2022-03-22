@@ -4,20 +4,22 @@ const config = require('../config');
 fs = require('fs');
 var builder = require('xmlbuilder');
 const { XMLParser } = require('fast-xml-parser');
+
 async function getXMLData(element) {
     const parser = new XMLParser();
-    let jsonObj = parser.parse(element.name);
-    var structureName = jsonObj.root.Name;
+    var structureName = element.name;
+    console.info(`Processing Web Content Structure ${structureName}`);
     var root = builder.create('root');
     root = root.ele("structure");
-    root = root.ele("name").text(structureName);
+    root = root.ele("name").text(element.name);
     root = root.up();
-    root = root.ele("description").text(element.description == "" ? "" : element.description);//definition:
+    root = root.ele("description").text(element.description == "" ? "" : element.description);
     root = root.up();
-    root = root.ele("definition").cdata(element.definition);
+    root = root.ele("definition").cdata(JSON.stringify(await applications.getContentStructureWebDav(element.id)));
     root = root.end({ pretty: true });
     await createFile(root, structureName + ".xml");
 }
+
 async function createFile(filedata, filename) {
     if (!fs.existsSync(dir)) {
         fs.mkdirSync(dir, { recursive: true });
@@ -27,9 +29,10 @@ async function createFile(filedata, filename) {
     });
 }
 async function start() {
-    var rows = await applications.getContentStructures();
-    for (let index = 0; index < rows.data.length; index++) {
-        const element = rows.data[index];
+    var data = await applications.getContentStructures();
+    console.info(`${data.length} Web Content Structures Found!`);
+    for (let index = 0; index < data.length; index++) {
+        const element = data[index];
         getXMLData(element);
     }
 }
