@@ -18,7 +18,8 @@ async function selectSite() {
         SitesMap.push({
             key: char,
             groupId: sites[index].id,
-            value: sites[index].key
+            value: sites[index].key,
+            friendlyUrlPath:sites[index].friendlyUrlPath
         });
         _choices.push(choice);
         char = String.fromCharCode(char.charCodeAt(char.length - 1) + 1);
@@ -33,29 +34,13 @@ async function selectSite() {
     ]).then(respo => {
         var site = SitesMap.filter(site => site.value === respo.groupId)[0];
         config.setSiteId(site.groupId);
+        config.setFriendlyUrlPath(site.friendlyUrlPath);
         start.start();
     });
 }
 async function setup() {
     inquirer.prompt([
         {
-            name: 'host',
-            message: 'What is your DB host?',
-            default: '127.0.0.1'
-        },
-        {
-            name: 'user',
-            message: 'What is your DB user?',
-            default: 'root'
-        }, {
-            name: 'password',
-            message: 'What is your DB password?',
-            default: 'SQLAdmin'
-        }, {
-            name: 'database',
-            message: 'What is your DB name?',
-            default: 'newlr_insurance_74'
-        }, {
             name: 'LRHost',
             message: 'What is your Liferay Portal URL?',
             default: 'http://localhost:8080'
@@ -69,8 +54,7 @@ async function setup() {
             default: 'L1feray$'
         }
     ]).then(answers => {
-        config.setup(answers.host, answers.user, answers.password, answers.database,
-            answers.LRHost, answers.LRUser, answers.LRPassword);
+        config.setup(answers.LRHost, answers.LRUser, answers.LRPassword);
         selectSite();
     });
 

@@ -1,28 +1,41 @@
-const db = require('./db');
 const config = require('../config');
+
+var digestRequest = require('request-digest')(config.config().liferay.user
+  , config.config().liferay.password);
+
 const helper = require('../helper');
-var request = require('request');
-async function getSitesDB() {
-  const rows = await db.query(
-    `SELECT * FROM group_ where site  = 1 and type_ = 1`
-  );
-  const data = helper.emptyOrRows(rows);
-  const meta = {};
-  return {
-    data,
-    meta
-  }
+const request = require('request');
+
+
+async function getContentStructureWebDav(structureId) {
+  return new Promise(function (resolve, reject) {
+    const DigestFetch = require('digest-fetch')
+    const client = new DigestFetch(config.config().liferay.user, config.config().liferay.password, { algorithm: 'MD5' })
+    client.fetch(`${config.config().liferay.host}/webdav/${config.config().friendlyUrlPath}/journal/Structures/${structureId}`, {})
+    .then(res =>
+       res.json()
+       ).then(data => 
+        resolve(data));
+  });
 }
+
 async function getContentStructures() {
-  const rows = await db.query(
-    `SELECT * FROM ddmstructure where classNameId = 20134 and groupid=${config.config().siteId}`
-  );
-  const data = helper.emptyOrRows(rows);
-  const meta = {};
-  return {
-    data,
-    meta
-  }
+  return new Promise(function (resolve, reject) {
+    var options = {
+      'method': 'GET',
+      'url': `${config.config().liferay.host}/o/headless-delivery/v1.0/sites/${config.config().siteId}/content-structures`,
+      'headers': {
+        'Authorization': "Basic " + new Buffer.from(config.config().liferay.user
+          + ":" + config.config().liferay.password).toString("base64")
+      }
+    };
+    request(options, function (error, response) {
+      if (error) {
+        reject(error)
+      };
+      resolve((JSON.parse(response.body)).items);
+    });
+  });
 }
 async function getSites() {
   return new Promise(function (resolve, reject) {
@@ -35,7 +48,7 @@ async function getSites() {
       }
     };
     request(options, function (error, response) {
-      if (error){
+      if (error) {
         reject(error)
       };
       resolve((JSON.parse(response.body)).items);
@@ -47,14 +60,14 @@ async function getRootDocuments() {
   return new Promise(function (resolve, reject) {
     var options = {
       'method': 'GET',
-      'url': `${config.config().liferay.host}/o/headless-delivery/v1.0/sites/20123/documents?page=0&pageSize=999999`,
+      'url': `${config.config().liferay.host}/o/headless-delivery/v1.0/sites/${config.config().siteId}/documents?page=0&pageSize=999999`,
       'headers': {
         'Authorization': "Basic " + new Buffer.from(config.config().liferay.user
           + ":" + config.config().liferay.password).toString("base64")
       }
     };
     request(options, function (error, response) {
-      if (error){
+      if (error) {
         reject(error)
       };
       resolve(JSON.parse(response.body));
@@ -64,5 +77,6 @@ async function getRootDocuments() {
 module.exports = {
   getContentStructures,
   getRootDocuments,
-  getSites
+  getSites,
+  getContentStructureWebDav
 }
