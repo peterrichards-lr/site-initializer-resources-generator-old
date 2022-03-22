@@ -2,7 +2,7 @@ const db = require('./db');
 const config = require('../config');
 const helper = require('../helper');
 var request = require('request');
-async function getSites() {
+async function getSitesDB() {
   const rows = await db.query(
     `SELECT * FROM group_ where site  = 1 and type_ = 1`
   );
@@ -24,15 +24,33 @@ async function getContentStructures() {
     meta
   }
 }
+async function getSites() {
+  return new Promise(function (resolve, reject) {
+    var options = {
+      'method': 'GET',
+      'url': `${config.config().liferay.host}/o/headless-admin-user/v1.0/my-user-account/sites`,
+      'headers': {
+        'Authorization': "Basic " + new Buffer.from(config.config().liferay.user
+          + ":" + config.config().liferay.password).toString("base64")
+      }
+    };
+    request(options, function (error, response) {
+      if (error){
+        reject(error)
+      };
+      resolve((JSON.parse(response.body)).items);
+    });
+  });
+}
 
 async function getRootDocuments() {
   return new Promise(function (resolve, reject) {
     var options = {
       'method': 'GET',
-      'url': `${config.config().liferay.host}/o/headless-delivery/v1.0/sites/${config.config().siteId}/documents?page=0&pageSize=999999`,
+      'url': `${config.config().liferay.host}/o/headless-delivery/v1.0/sites/20123/documents?page=0&pageSize=999999`,
       'headers': {
         'Authorization': "Basic " + new Buffer.from(config.config().liferay.user
-          + ":" + config.config().liferay.password).toString("base64"),
+          + ":" + config.config().liferay.password).toString("base64")
       }
     };
     request(options, function (error, response) {

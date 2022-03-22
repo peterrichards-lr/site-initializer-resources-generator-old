@@ -13,12 +13,12 @@ async function selectSite() {
     var sites = await applications.getSites();
     var _choices = [];
     var char = 'A';
-    for (index = 0; index < sites.data.length; index++) {
-        var choice = sites.data[index].groupKey;
+    for (index = 0; index < sites.length; index++) {
+        var choice = sites[index].key;
         SitesMap.push({
             key: char,
-            groupId: sites.data[index].groupId,
-            value: sites.data[index].groupKey
+            groupId: sites[index].id,
+            value: sites[index].key
         });
         _choices.push(choice);
         char = String.fromCharCode(char.charCodeAt(char.length - 1) + 1);
