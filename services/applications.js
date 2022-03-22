@@ -29,7 +29,7 @@ async function getRootDocuments() {
   return new Promise(function (resolve, reject) {
     var options = {
       'method': 'GET',
-      'url': `${config.config().liferay.host}/o/headless-delivery/v1.0/sites/20123/documents?page=0&pageSize=999999`,
+      'url': `${config.config().liferay.host}/o/headless-delivery/v1.0/sites/${config.config().siteId}/documents?page=0&pageSize=999999`,
       'headers': {
         'Authorization': "Basic " + new Buffer.from(config.config().liferay.user
           + ":" + config.config().liferay.password).toString("base64"),
