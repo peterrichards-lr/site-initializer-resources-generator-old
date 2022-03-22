@@ -4,7 +4,7 @@ const helper = require('../helper');
 var request = require('request');
 async function getSites() {
   const rows = await db.query(
-    `SELECT * FROM newlr_insurance_74.group_ where site  = 1 and type_ = 1`
+    `SELECT * FROM group_ where site  = 1 and type_ = 1`
   );
   const data = helper.emptyOrRows(rows);
   const meta = {};
