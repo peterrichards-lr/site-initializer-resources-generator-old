@@ -1,3 +1,4 @@
+const thumbnail = require('./thumbnail');
 const webcontent = require('./webcontent');
 const documents = require('./documents');
 
@@ -6,8 +7,9 @@ const documents = require('./documents');
 
 function start()
 {
-    webcontent.start();
-    documents.start();
+    thumbnail.start();
+    //webcontent.start();
+    //documents.start();
 }
 
 module.exports = {

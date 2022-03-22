@@ -8,11 +8,17 @@ function setup(host,user,password,database,LRHost,LRUser,LRPassword)
     global._config.liferay.host=LRHost;
     global._config.liferay.user=LRUser;
     global._config.liferay.password=LRPassword;
+    global._config.siteId = 0;
+    global._config.site = "guest";
 }
 
 function setSiteId(siteId)
 {
     global._config.siteId = siteId;
+}
+function setSite(site)
+{
+    global._config.site = site;
 }
 function config()
 {
@@ -21,5 +27,6 @@ function config()
 module.exports = {
     config,
     setup,
-    setSiteId
+    setSiteId,
+    setSite
 };

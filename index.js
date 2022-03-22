@@ -3,6 +3,7 @@ const inquirer = require('inquirer');
 const config = require('./config');
 const start = require('./jobs/start');
 const docs = require('./jobs/documents');
+const thumbnail = require('./jobs/thumbnail');
 
 const applications = require('./services/applications');
 var fs = require('fs');
@@ -33,6 +34,7 @@ async function selectSite() {
     ]).then(respo => {
         var site = SitesMap.filter(site => site.value === respo.groupId)[0];
         config.setSiteId(site.groupId);
+        config.setSite(site.value);
         start.start();
     });
 }
